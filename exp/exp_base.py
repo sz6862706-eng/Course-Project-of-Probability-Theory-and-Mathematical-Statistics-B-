@@ -208,7 +208,6 @@ if __name__ == "__main__":
     torch.manual_seed(2025)
     np.random.seed(2025)
     
-    # 🔧 修复1: 先划分数据,再归一化
     # 划分数据集 (70% 训练, 10% 验证, 20% 测试)
     train_size = int(len(close) * 0.7)
     val_size = int(len(close) * 0.1)
@@ -217,7 +216,6 @@ if __name__ == "__main__":
     val_close = close[train_size:train_size + val_size]
     test_close = close[train_size + val_size:]
     
-    # 🔧 修复2: 只在训练集上fit scaler
     scaler = MinMaxScaler()
     train_data = scaler.fit_transform(train_close)  # 只在训练集上fit
     val_data = scaler.transform(val_close)          # 用训练集的scaler transform
@@ -233,7 +231,6 @@ if __name__ == "__main__":
     print(f"验证集: [{val_data.min():.4f}, {val_data.max():.4f}]")
     print(f"测试集: [{test_data.min():.4f}, {test_data.max():.4f}]")
     
-    # 🔧 修复3: 使用更合理的序列长度
     seq_len = 20  # 减少到20,避免模型只需要记住最后一个值
     
     # 创建数据集和数据加载器
@@ -435,4 +432,5 @@ if __name__ == "__main__":
     print(f"测试集MAE: {best_model['test_mae']:.2f} (基线: {baseline_mae:.2f}, 改进: {(1-best_model['test_mae']/baseline_mae)*100:.1f}%)")
     print(f"测试集MAPE: {best_model['test_mape']:.2f}% (基线: {baseline_mape:.2f}%)")
     print(f"训练时间: {best_model['training_time']:.2f}秒")
+
     print(f"{'='*60}")
